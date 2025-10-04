@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema(
+const adminSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
@@ -14,16 +14,15 @@ const userSchema = new mongoose.Schema(
       trim: true,
       minlength: 3,
     },
-
-    hashedPassword: {
-      type: String,
-      required: [true, "Password is required."],
-    },
     phoneNumber: {
       type: String,
       required: [true, "Mobile number is required."],
       unique: true,
       trim: true,
+    },
+    hashedPassword: {
+      type: String,
+      required: [true, "Password is required."],
     },
     profilePictureUrl: {
       type: String,
@@ -34,26 +33,12 @@ const userSchema = new mongoose.Schema(
       enum: ["user", "superadmin", "admin"],
       default: "user",
     },
-
-    // Location information using GeoJSON format for geospatial queries
-    location: {
-      type: {
-        type: String,
-        enum: ["Point"],
-        // required: true,
-      },
-      coordinates: {
-        type: [Number], // [longitude, latitude]
-        // required: true,
-      },
-    },
-
     // Verification and Security
-    isEmailVerified: {
+    isPhoneNumberVerified: {
       type: Boolean,
       default: false,
     },
-    emailVerificationToken: {
+    phoneNumberVerificationToken: {
       type: String,
     },
     passwordResetToken: {
@@ -77,6 +62,9 @@ const userSchema = new mongoose.Schema(
         ref: "Booking", // This refers to a 'Booking' model
       },
     ],
+
+
+
   },
   {
     // Add timestamps automatically
@@ -84,6 +72,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.models.users || mongoose.model("users", userSchema);
+const Admin = mongoose.models.admins || mongoose.model("admins", adminSchema);
 
-export default User;
+export default Admin;

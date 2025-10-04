@@ -48,6 +48,22 @@ const matchSchema = new mongoose.Schema({
     enum: ["regular", "team", "tournament"],
     default: "regular",
   },
+  regular: {
+    type: String,
+    members: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
+    totalPlayers: Number,
+  },
+  team: {
+    team: [{ type: mongoose.Schema.Types.ObjectId, ref: "teams" }],
+    totalPlayers: Number,
+  },
+  tournament: {
+    entryFee: Number,
+    prize: Number,
+    teams: [{ type: mongoose.Schema.Types.ObjectId, ref: "teams" }],
+    totalTeams: Number,
+  },
+
   status: {
     type: String,
     enum: ["pending", "active", "completed", "cancelled"],
@@ -67,5 +83,5 @@ const matchSchema = new mongoose.Schema({
   },
 });
 
-const Match = mongoose.model("matches", matchSchema);
+const Match = mongoose.models.matches || mongoose.model("matches", matchSchema);
 export default Match;
