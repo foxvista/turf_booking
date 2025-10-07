@@ -27,23 +27,21 @@ const trufSchema = new mongoose.Schema(
     },
     scheduledTime: {
       open: {
-        type: Number,
-        required: [true, "Scheduled time is required"],
-        enum: ["AM", "PM"],
+        hour: { type: Number, required: true },
+        period: { type: String, enum: ["AM", "PM"], required: true },
       },
       close: {
-        type: Number,
-        required: [true, "Scheduled time is required"],
-        enum: ["AM", "PM"],
+        hour: { type: Number, required: true },
+        period: { type: String, enum: ["AM", "PM"], required: true },
       },
     },
-    turfImageUrl: [
+    turfUrl: [
       {
         type: String,
         required: [true, "image URL is required"],
       },
     ],
-    turfVideoUrl: [{ type: String }],
+
     hourlyRate: {
       type: Number,
       required: [true, "Hourly rate is required"],
@@ -54,11 +52,23 @@ const trufSchema = new mongoose.Schema(
       required: [true, "Total grounds is required"],
     },
     typeOfSport: [
-      { type: String, required: [true, "Type of sport is required"] },
+      {
+        sports: {
+          type: String,
+          required: [true, "Type of sport is required"],
+        },
+        gameFormat: {
+          type: String,
+        },
+      },
     ],
-    game_format: [
-      { type: String, required: [true, "Game format is required"] },
-    ],
+    review: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Review",
+    },
+    zap: {
+      type: String,
+    },
     desciption: {
       type: String,
     },
@@ -71,13 +81,15 @@ const trufSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    deleted:{
-      type:Boolean,
-      default:false
-    }
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
-const CreateTruf = mongoose.models.trufs || mongoose.model("trufs", trufSchema);
-export default CreateTruf;
+trufSchema.index({ location: "2dsphere" });
+
+const Truf = mongoose.models.trufs || mongoose.model("trufs", trufSchema);
+export default Truf;
