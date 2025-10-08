@@ -13,27 +13,38 @@ const matchSchema = new mongoose.Schema({
   turfId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "turfs",
-    required: true,
+  },
+  location: {
+    type: {
+      type: String,
+      enum: ["Point"],
+    },
+    coordinates: {
+      type: [Number], // [longitude, latitude]
+    },
+  },
+  localGround: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "localgrounds",
   },
   bookingTime: {
     bookingFrom: {
-      type: String,
-      required: [true, "Booking time is required"],
+      hour: { type: Number },
+      period: { type: String, enum: ["AM", "PM"], required: true },
     },
     bookingTo: {
-      type: String,
-      required: [true, "Booking time is required"],
+      hour: { type: Number },
+      period: { type: String, enum: ["AM", "PM"], required: true },
     },
   },
-  members: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
-    },
-  ],
+
   sports: {
-    type: String,
-    required: [true, "Sport type is required"],
+    sport: {
+      type: String,
+      required: [true, "Sport type is required"],
+    },
+
+    sportFormation: { type: String },
   },
   payAndJoin: {
     type: Boolean,
@@ -49,13 +60,12 @@ const matchSchema = new mongoose.Schema({
     default: "regular",
   },
   regular: {
-    type: String,
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
     totalPlayers: Number,
   },
   team: {
     team: [{ type: mongoose.Schema.Types.ObjectId, ref: "teams" }],
-    totalPlayers: Number,
+    totalTeams: Number,
   },
   tournament: {
     entryFee: Number,

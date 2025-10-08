@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { jwtVerify } from "jose";
 
 export async function middleware(request) {
   const path = request.nextUrl.pathname;
@@ -18,5 +17,9 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/api/user/logout", "/api/user/profile"],
+  matcher: [
+    "/api/user/logout",
+    "/api/user/profile",
+    "/api/user/matches/createMatch",
+  ],
 };
