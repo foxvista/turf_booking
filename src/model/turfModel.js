@@ -1,30 +1,64 @@
 import mongoose from "mongoose";
 
-const trufSchema = new mongoose.Schema(
+const turfSchema = new mongoose.Schema(
   {
+    adminId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "admins",
+      required: true,
+    },
     ownerName: {
       type: String,
       required: [true, "Owner name is required"],
     },
+
     turfName: {
       type: String,
       required: [true, "Turf name is required"],
     },
+
+    address: {
+      country: {
+        type: String,
+        required: [true, "Country is required"],
+      },
+      state: {
+        type: String,
+        required: [true, "State is required"],
+      },
+      city: {
+        type: String,
+        required: [true, "City is required"],
+      },
+      street: {
+        type: String,
+        required: [true, "Street is required"],
+      },
+      zipCode: {
+        type: String,
+        required: [true, "Zip code is required"],
+      },
+    },
+
     location: {
       type: {
         type: String,
         enum: ["Point"],
-        // required: true,
+        default: "Point",
       },
       coordinates: {
         type: [Number], // [longitude, latitude]
-        // required: true,
+        default: [0, 0],
       },
     },
-    address: {
-      type: String,
-      required: [true, "Address is required"],
-    },
+
+    turfUrl: [
+      {
+        type: String,
+        required: [true, "image URL is required"],
+      },
+    ],
+
     scheduledTime: {
       open: {
         hour: { type: Number, required: true },
@@ -35,52 +69,55 @@ const trufSchema = new mongoose.Schema(
         period: { type: String, enum: ["AM", "PM"], required: true },
       },
     },
-    turfUrl: [
-      {
-        type: String,
-        required: [true, "image URL is required"],
-      },
-    ],
 
-    hourlyRate: {
-      type: Number,
-      required: [true, "Hourly rate is required"],
-    },
     facilitys: [{ type: String }],
+
     totalGorunds: {
       type: Number,
       required: [true, "Total grounds is required"],
     },
+
     typeOfSport: [
       {
         sports: {
           type: String,
           required: [true, "Type of sport is required"],
         },
+
         gameFormat: {
           type: String,
         },
+        hourlyRate: {
+          type: Number,
+          required: [true, "rate is required"],
+        },
       },
     ],
+
     review: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Review",
     },
+
     zap: {
       type: String,
     },
+
     desciption: {
       type: String,
     },
+
     verificationStatus: {
       type: String,
       enum: ["pending", "verified", "rejected"],
       default: "pending",
     },
+
     isActive: {
       type: Boolean,
       default: true,
     },
+
     deleted: {
       type: Boolean,
       default: false,
@@ -89,7 +126,7 @@ const trufSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-trufSchema.index({ location: "2dsphere" });
+turfSchema.index({ location: "2dsphere" });
 
-const Truf = mongoose.models.trufs || mongoose.model("trufs", trufSchema);
-export default Truf;
+const Turf = mongoose.models.trufs || mongoose.model("turfs", turfSchema);
+export default Turf;

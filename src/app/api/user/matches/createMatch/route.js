@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { handleError } from "@/helpers/errorHelper";
 import { getData } from "@/helpers/getData";
 import Match from "@/model/createMatchModel";
+import Turf from "@/model/turfModel";
 
 connect();
 
@@ -14,7 +15,7 @@ export async function POST(request) {
     const {
       matchName,
       turfId,
-      location,
+      localMatch,
       slotTime,
       sport,
       payAndJoin,
@@ -25,13 +26,22 @@ export async function POST(request) {
       tournament,
     } = reqBody;
 
+    const turfData = await Turf.findById(turfId);
+
     const matchPayload = {
       userId,
       matchName,
       turfId,
+
       location: {
         type: "Point",
-        coordinates: [location.coordinates[0], location.coordinates[1]],
+        coordinates: [
+          localMatch.location.coordinates[0],
+          localMatch.location.coordinates[1] || [
+            turfData.location.coordinates[0],
+          ],
+          [turfData.location.coordinates[1]],
+        ],
       },
       bookingTime: {
         bookingFrom: {
@@ -51,17 +61,23 @@ export async function POST(request) {
       splitAmount,
       gameType,
       status: "active",
-      createdAt: new Date(),
-      updatedAt: new Date(),
     };
 
-    // ✅ Conditionally add based on game type
-    if (gameType === "regular" && regular) {
-      matchPayload.regular = {
-        members: regular.members || [],
-        totalPlayers: regular.totalPlayers || 0,
+    if (localMatch) {
+      matchPayload.localMatch = {
+        groundImages: localMatch.groundImages || [],
+        active: true,
       };
     }
+
+    if (localMatch)
+      if (gameType === "regular" && regular) {
+        // ✅ Conditionally add based on game type
+        matchPayload.regular = {
+          members: regular.members || [],
+          totalPlayers: regular.totalPlayers || 0,
+        };
+      }
 
     if (gameType === "team" && team) {
       matchPayload.team = {

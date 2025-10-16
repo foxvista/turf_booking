@@ -21,5 +21,6 @@ export const config = {
     "/api/user/logout",
     "/api/user/profile",
     "/api/user/matches/createMatch",
+    "/api/admin/turf/:path*",
   ],
 };

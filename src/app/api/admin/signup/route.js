@@ -17,8 +17,6 @@ export async function POST(request) {
       );
     }
 
-    console.log(reqBody);
-
     // Check if admin already exists
 
     const existingAdmin = await Admin.findOne({

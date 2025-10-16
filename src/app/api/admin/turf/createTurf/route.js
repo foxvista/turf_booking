@@ -1,14 +1,16 @@
+import { handleError } from "@/helpers/errorHelper";
 import { connect } from "@/lib/db";
-import Turf from "@/model/trufModel";
+import Turf from "@/model/turfModel";
+import { getData } from "@/helpers/getData";
 connect();
 
 export async function POST(request) {
   try {
+    const adminId = getData(request);
     const reqBody = await request.json();
     const {
       ownerName,
       turfName,
-      location,
       address,
       openTime,
       closedTime,
@@ -24,9 +26,9 @@ export async function POST(request) {
     if (
       !ownerName ||
       !turfName ||
-      !location ||
       !address ||
-      !scheduledTime ||
+      !openTime ||
+      !closedTime ||
       !turfUrl ||
       !totalGorunds ||
       !typeOfSport
@@ -59,20 +61,31 @@ export async function POST(request) {
     // create new turf
 
     const newTurf = new Turf({
+      adminId,
       ownerName,
       turfName,
-      location,
-      address,
+      address: {
+        country: address.country,
+        state: address.state,
+        city: address.city,
+        street: address.street,
+        zipCode: address.zipCode,
+      },
+
       scheduledTime: {
         open: { hour: openTime.time, period: openTime.period },
         close: { hour: closedTime.time, period: closedTime.period },
       },
+
+      //image url not added
       turfUrl,
+
       facilitys,
       totalGorunds,
       typeOfSport: typeOfSport.map((sport) => ({
         sports: sport.sports,
         gameFormat: sport.gameFormat,
+        hourlyRate: sport.hourlyRate,
       })),
       desciption,
     });
@@ -86,9 +99,6 @@ export async function POST(request) {
       }
     );
   } catch (error) {
-    console.log("Error in registration route:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-    });
+    handleError(error);
   }
 }
