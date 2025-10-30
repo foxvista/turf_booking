@@ -2,6 +2,8 @@ import { handleError } from "@/helpers/errorHelper";
 import { connect } from "@/lib/db";
 import Turf from "@/model/turfModel";
 import { getData } from "@/helpers/getData";
+import axios from "axios";
+
 connect();
 
 export async function POST(request) {
@@ -14,7 +16,6 @@ export async function POST(request) {
       address,
       openTime,
       closedTime,
-      turfUrl,
       facilitys,
       totalGorunds,
       typeOfSport,
@@ -29,7 +30,6 @@ export async function POST(request) {
       !address ||
       !openTime ||
       !closedTime ||
-      !turfUrl ||
       !totalGorunds ||
       !typeOfSport
     ) {
@@ -58,6 +58,18 @@ export async function POST(request) {
       });
     }
 
+    //   const addressString = `${address.street}, ${address.city}, ${address.state}, ${address.zipCode}, ${address.country}`;
+    //     const encodedAddress = encodeURIComponent(addressString);
+    //     const geolocation = `https://geocode.maps.co/search?q=${encodedAddress} & api_key=${process.env.GEOCODING_API}
+    // `;
+    //     try {
+    //       const geoData = await axios.get(geolocation);
+
+    //       console.log(geoData.data,"======");
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+
     // create new turf
 
     const newTurf = new Turf({
@@ -73,12 +85,9 @@ export async function POST(request) {
       },
 
       scheduledTime: {
-        open: { hour: openTime.time, period: openTime.period },
-        close: { hour: closedTime.time, period: closedTime.period },
+        open: { hour: openTime.time },
+        close: { hour: closedTime.time },
       },
-
-      //image url not added
-      turfUrl,
 
       facilitys,
       totalGorunds,
@@ -99,6 +108,6 @@ export async function POST(request) {
       }
     );
   } catch (error) {
-    handleError(error);
+    return handleError(error);
   }
 }

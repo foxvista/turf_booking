@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
@@ -62,7 +62,7 @@ const userSchema = new mongoose.Schema(
     passwordResetExpires: {
       type: Date,
     },
-
+    addedGroups: [{ type: mongoose.Schema.Types.ObjectId, ref: "groups" }],
     // Moderation and Status
     isBlocked: {
       type: Boolean,

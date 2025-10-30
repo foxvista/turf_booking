@@ -52,21 +52,17 @@ const turfSchema = new mongoose.Schema(
       },
     },
 
-    turfUrl: [
-      {
-        type: String,
-        required: [true, "image URL is required"],
-      },
-    ],
+    turfUrls: {
+      type: [String], // array of strings
+      default: [], // safe default for empty
+    },
 
     scheduledTime: {
       open: {
-        hour: { type: Number, required: true },
-        period: { type: String, enum: ["AM", "PM"], required: true },
+        hour: { type: String, required: true },
       },
       close: {
-        hour: { type: Number, required: true },
-        period: { type: String, enum: ["AM", "PM"], required: true },
+        hour: { type: String, required: true },
       },
     },
 
@@ -100,7 +96,17 @@ const turfSchema = new mongoose.Schema(
     },
 
     zap: {
-      type: String,
+      userId: [
+        {
+          zapLike: {
+            type: Boolean,
+            default: false,
+          },
+          userId: {
+            type: String,
+          },
+        },
+      ],
     },
 
     desciption: {
@@ -128,5 +134,5 @@ const turfSchema = new mongoose.Schema(
 
 turfSchema.index({ location: "2dsphere" });
 
-const Turf = mongoose.models.trufs || mongoose.model("turfs", turfSchema);
+const Turf = mongoose.models.turfs || mongoose.model("turfs", turfSchema);
 export default Turf;

@@ -15,7 +15,10 @@ export async function GET(request) {
       "-hashedPassword -reports -__v -updatedAt"
     );
 
-    return NextResponse.json({ user: userData }, { status: 200 });
+    return NextResponse.json(
+      { data: userData, message: "data fetched succesfully" },
+      { status: 200 }
+    );
   } catch (error) {
     console.log(error.message);
     return NextResponse.json(

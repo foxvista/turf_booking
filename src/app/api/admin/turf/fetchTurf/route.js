@@ -17,10 +17,13 @@ export async function GET(request) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
+    const zapLike = turfData.zap.filter((zap) => zap.zapLike === true).length;
+
     return NextResponse.json({
       status: 200,
       message: "Data fetched successfully.",
       turfData,
+      zapLike,
     });
   } catch (error) {
     handleError(error);
