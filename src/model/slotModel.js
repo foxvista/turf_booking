@@ -8,7 +8,13 @@ const slotSchema = new mongoose.Schema({
   },
   slots: [
     {
+      ground: { type: String },
       date: { type: Date, default: Date.now },
+      sport: [{ type: String }],
+      price: {
+        type: String,
+        required: true,
+      },
       time: [
         {
           start: { type: String, required: true },
@@ -19,8 +25,11 @@ const slotSchema = new mongoose.Schema({
             ref: "users",
             default: null,
           },
+          active: { type: Boolean, default: true },
         },
       ],
+
+      active: { type: Boolean, default: true },
     },
   ],
 });

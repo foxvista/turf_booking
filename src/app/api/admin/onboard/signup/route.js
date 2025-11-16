@@ -6,11 +6,11 @@ connect();
 export async function POST(request) {
   try {
     const reqBody = await request.json();
-    const { fullName, userName, phoneNumber, password } = reqBody;
+    const { fullName, userName, phoneNumber, password,mailId } = reqBody;
 
     //verification for empty fields
 
-    if (!fullName || !password || !phoneNumber || !userName) {
+    if (!fullName || !password || !phoneNumber || !userName ||!mailId) {
       return new Response(
         JSON.stringify({ error: "All fields are required." }),
         { status: 400 }
@@ -45,6 +45,7 @@ export async function POST(request) {
       phoneNumber,
       hashedPassword,
       role: "admin",
+      mailId
     });
 
     await newAdmin.save();

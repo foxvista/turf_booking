@@ -14,7 +14,7 @@ export async function POST(request) {
       ownerName,
       turfName,
       address,
-      openTime,
+      openTime, //input should be in 24 hours 
       closedTime,
       facilitys,
       totalGorunds,

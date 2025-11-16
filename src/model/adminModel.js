@@ -14,11 +14,28 @@ const adminSchema = new mongoose.Schema(
       trim: true,
       minlength: 3,
     },
+    mailId: {
+      type: String,
+      unique: true,
+      required: [true, "Mail Id is required"],
+      match: [
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        "Please enter a valid email address",
+      ],
+    },
+    mailVerified: {
+      type: Boolean,
+      default: false,
+    },
     phoneNumber: {
       type: String,
       required: [true, "Mobile number is required."],
       unique: true,
       trim: true,
+    },
+    phoneVerified: {
+      type: Boolean,
+      default: false,
     },
     hashedPassword: {
       type: String,
@@ -62,9 +79,6 @@ const adminSchema = new mongoose.Schema(
         ref: "Booking", // This refers to a 'Booking' model
       },
     ],
-
-
-
   },
   {
     // Add timestamps automatically
